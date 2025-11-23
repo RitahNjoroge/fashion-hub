@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>All Posts - Fashion Hub</title>
+    <meta name="description" content="Browse all fashion posts, tutorials, and lessons on Fashion Hub.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="/favicon.ico" />
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="nav-brand">
+                <div class="logo">🎨 Fashion Hub</div>
+                <button id="nav-toggle" class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="posts.html" class="active">All Posts</a>
+                <div id="auth-buttons">
+                    <a href="login.html" class="btn-secondary">Login</a>
+                    <a href="register.html" class="btn-primary">Sign Up</a>
+                </div>
+                <div id="user-menu" class="hidden">
+                    <a href="dashboard.html">Dashboard</a>
+                    <a href="create-post.html" class="btn-primary">Create Post</a>
+                    <button onclick="logout()" class="btn-secondary">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="main" class="posts-container">
+        <div class="posts-header">
+            <div class="posts-info">
+                <h1>All Posts</h1>
+                <p class="lead">Latest style tips, tutorials and community posts.</p>
+            </div>
+
+            <div class="posts-actions">
+                <div class="search-box">
+                    <label for="post-search" class="visually-hidden">Search posts</label>
+                    <input id="post-search" type="search" placeholder="Search posts, authors, categories..." aria-label="Search posts">
+                </div>
+                <div id="create-post-btn" class="hidden">
+                    <a href="create-post.html" class="btn btn-primary">Create Post</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="posts-grid" id="posts-list" aria-live="polite">
+            <div class="loading">Loading posts...</div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <small>© Fashion Hub — Learn & Teach Fashion</small>
+            <nav class="footer-nav">
+                <a href="index.html">Home</a>
+                <a href="posts.html">All Posts</a>
+                <a href="register.html">Register</a>
+            </nav>
+        </div>
+    </footer>
+
+    <script src="script.js" defer></script>
+</body>
+</html>

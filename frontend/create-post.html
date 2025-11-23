@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Create Post - Fashion Hub</title>
+    <meta name="description" content="Create a new post on Fashion Hub">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="/favicon.ico" />
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="nav-brand">
+                <div class="logo">🎨 Fashion Hub</div>
+                <button id="nav-toggle" class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="posts.html">All Posts</a>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="create-post.html" class="btn-secondary active">Create Post</a>
+                <button onclick="logout()" class="btn-secondary">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <main id="main" class="form-container">
+        <div class="form-card">
+            <h1>Create New Post</h1>
+
+            <div class="error" id="error-message"></div>
+            <div class="success" id="success-message"></div>
+
+            <form id="create-post-form">
+                <div class="form-group">
+                    <label for="title">Post Title</label>
+                    <input type="text" id="title" placeholder="Enter post title" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" required>
+                        <option value="">Select a category</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="post-type">Post Type</label>
+                    <select id="post-type" required>
+                        <option value="blog">Blog Post</option>
+                        <option value="social">Social Post</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="image">Featured Image</label>
+                    <input type="file" id="image" accept="image/*">
+                    <small class="form-help">Optional: JPG, PNG, GIF. Max 5MB</small>
+                    <div id="image-preview" class="image-preview" style="display: none;">
+                        <img id="preview-img" class="preview-image">
+                        <button type="button" id="remove-image" class="btn btn-secondary btn-small">Remove</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="content">Content</label>
+                    <textarea id="content" placeholder="Write your post content..." required rows="6"></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-success">Publish Post</button>
+                    <a href="dashboard.html" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        let currentUser = null;
+
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+
+            if (!token || !user) {
+                window.location.href = '/login';
+                return;
+            }
+
+            currentUser = JSON.parse(user);
+            loadCategories();
+            setupImagePreview();
+        }
+
+        async function loadCategories() {
+            try {
+                const response = await fetch('/api/categories');
+                const data = await response.json();
+
+                const categorySelect = document.getElementById('category');
+                if (data.success && data.categories) {
+                    categorySelect.innerHTML = '<option value="">Select a category</option>' +
+                        data.categories.map(cat => 
+                            `<option value="${cat.id}">${cat.name}</option>`
+                        ).join('');
+                } else {
+                    categorySelect.innerHTML = '<option value="">No categories available</option>';
+                }
+            } catch (error) {
+                console.error('Error loading categories:', error);
+                document.getElementById('category').innerHTML = '<option value="">Error loading categories</option>';
+            }
+        }
+
+        function setupImagePreview() {
+            const imageInput = document.getElementById('image');
+            const previewContainer = document.getElementById('image-preview');
+            const previewImg = document.getElementById('preview-img');
+            const removeBtn = document.getElementById('remove-image');
+
+            imageInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert('File size must be less than 5MB');
+                        this.value = '';
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImg.src = e.target.result;
+                        previewContainer.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            removeBtn.addEventListener('click', function() {
+                imageInput.value = '';
+                previewContainer.style.display = 'none';
+                previewImg.src = '';
+            });
+        }
+
+        document.getElementById('create-post-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+            const category_id = document.getElementById('category').value;
+            const post_type = document.getElementById('post-type').value;
+            const imageFile = document.getElementById('image').files[0];
+
+            const errorDiv = document.getElementById('error-message');
+            const successDiv = document.getElementById('success-message');
+
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+
+            try {
+                const formData = new FormData();
+                formData.append('title', title);
+                formData.append('content', content);
+                formData.append('category_id', category_id);
+                formData.append('post_type', post_type);
+                
+                if (imageFile) {
+                    formData.append('image', imageFile);
+                }
+
+                const response = await fetch('/api/posts', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    successDiv.textContent = 'Post created successfully! Redirecting...';
+                    successDiv.style.display = 'block';
+
+                    setTimeout(() => {
+                        window.location.href = '/dashboard';
+                    }, 1500);
+                } else {
+                    errorDiv.textContent = data.error || 'Failed to create post';
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                errorDiv.textContent = 'Network error. Please try again.';
+                errorDiv.style.display = 'block';
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/';
+        }
+
+        // Navigation toggle
+        (function(){
+            const toggle = document.getElementById('nav-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            if (!toggle || !navLinks) return;
+            toggle.addEventListener('click', ()=>{
+                const open = navLinks.classList.toggle('open');
+                toggle.setAttribute('aria-expanded', open? 'true' : 'false');
+            });
+        })();
+
+        checkAuth();
+    </script>
+</body>
+</html>

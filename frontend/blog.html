@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fashion Blog - Fashion Hub</title>
+    <meta name="description" content="Read the latest fashion blog posts, trends, and industry insights on Fashion Hub.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="/favicon.ico" />
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="nav-brand">
+                <div class="logo">🎨 Fashion Hub</div>
+                <button id="nav-toggle" class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="posts.html">All Posts</a>
+                <a href="blog.html" class="active">Blog</a>
+                <div id="auth-buttons">
+                    <a href="login.html" class="btn-secondary">Login</a>
+                    <a href="register.html" class="btn-primary">Sign Up</a>
+                </div>
+                <div id="user-menu" class="hidden">
+                    <a href="dashboard.html">Dashboard</a>
+                    <a href="create-post.html" class="btn-primary">Create Post</a>
+                    <button onclick="logout()" class="btn-secondary">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="main" class="blog-container">
+        <div class="blog-header">
+            <div class="blog-info">
+                <h1>Fashion Blog</h1>
+                <p class="lead">Industry insights, trend analysis, and fashion education</p>
+            </div>
+            <div class="blog-actions">
+                <div class="search-box">
+                    <label for="blog-search" class="visually-hidden">Search blog posts</label>
+                    <input id="blog-search" type="search" placeholder="Search blog posts..." aria-label="Search blog">
+                </div>
+            </div>
+        </div>
+
+        <div class="blog-content">
+            <div class="blog-grid" id="blog-posts">
+                <div class="loading">Loading blog posts...</div>
+            </div>
+
+            <aside class="blog-sidebar">
+                <div class="sidebar-widget">
+                    <h3>Categories</h3>
+                    <div class="categories-list" id="blog-categories">
+                        <div class="loading">Loading categories...</div>
+                    </div>
+                </div>
+
+                <div class="sidebar-widget">
+                    <h3>Popular Tags</h3>
+                    <div class="tags-cloud" id="blog-tags">
+                        <span class="tag">Fashion Trends</span>
+                        <span class="tag">Sustainable Fashion</span>
+                        <span class="tag">Design Tips</span>
+                        <span class="tag">Industry News</span>
+                        <span class="tag">Style Guides</span>
+                    </div>
+                </div>
+
+                <div class="sidebar-widget">
+                    <h3>Featured Posts</h3>
+                    <div class="featured-posts" id="featured-posts">
+                        <div class="loading">Loading featured posts...</div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <small>© Fashion Hub — Learn & Teach Fashion</small>
+            <nav class="footer-nav">
+                <a href="index.html">Home</a>
+                <a href="posts.html">All Posts</a>
+                <a href="blog.html">Blog</a>
+                <a href="register.html">Register</a>
+            </nav>
+        </div>
+    </footer>
+
+    <script src="blog.js" defer></script>
+    <script src="script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Create Social Post - Fashion Hub</title>
+    <meta name="description" content="Create a social discussion post on Fashion Hub. Share thoughts, ask questions, or discuss fashion topics.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="/favicon.ico" />
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="nav-brand">
+                <div class="logo">🎨 Fashion Hub</div>
+                <button id="nav-toggle" class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="posts.html">All Posts</a>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="create-social-post.html" class="btn-primary active">Create Post</a>
+                <button onclick="logout()" class="btn-secondary">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <main id="main" class="form-container">
+        <div class="form-card">
+            <div class="post-type-badge" style="background: var(--accent); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem; display: inline-block; margin-bottom: 1rem;">
+                💬 Social Post
+            </div>
+            <h1>Start a Discussion</h1>
+            <p style="color: var(--text-light); margin-bottom: 2rem;">Share your thoughts, ask questions, or discuss fashion topics with the community</p>
+            
+            <div class="error" id="error-message"></div>
+            <div class="success" id="success-message"></div>
+
+            <form id="create-post-form">
+                <div class="form-group">
+                    <label for="title">Discussion Topic</label>
+                    <input type="text" id="title" placeholder="What's on your mind?" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="content">Your Message</label>
+                    <textarea id="content" placeholder="Share your thoughts, questions, or updates..." required rows="6"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" required>
+                        <option value="">Choose a topic</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-accent">Post Discussion</button>
+                    <a href="dashboard.html" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <small>© Fashion Hub — Learn & Teach Fashion</small>
+            <nav class="footer-nav">
+                <a href="index.html">Home</a>
+                <a href="posts.html">All Posts</a>
+                <a href="register.html">Register</a>
+            </nav>
+        </div>
+    </footer>
+
+    <script>
+        let currentUser = null;
+
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+            
+            if (!token || !user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            currentUser = JSON.parse(user);
+            loadCategories();
+        }
+
+        async function loadCategories() {
+            try {
+                const response = await fetch('/api/categories');
+                const data = await response.json();
+                
+                const categorySelect = document.getElementById('category');
+                if (data.success && data.categories) {
+                    categorySelect.innerHTML = '<option value="">Choose a topic</option>' +
+                        data.categories.map(cat => 
+                            `<option value="${cat.id}">${cat.name}</option>`
+                        ).join('');
+                } else {
+                    categorySelect.innerHTML = '<option value="">No categories available</option>';
+                }
+            } catch (error) {
+                console.error('Error loading categories:', error);
+                document.getElementById('category').innerHTML = '<option value="">Error loading categories</option>';
+            }
+        }
+
+        document.getElementById('create-post-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+            const category_id = document.getElementById('category').value;
+            
+            const errorDiv = document.getElementById('error-message');
+            const successDiv = document.getElementById('success-message');
+
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/posts', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({ title, content, category_id, post_type: 'social' })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    successDiv.textContent = 'Discussion posted successfully! Redirecting...';
+                    successDiv.style.display = 'block';
+
+                    setTimeout(() => {
+                        window.location.href = 'posts.html?type=social';
+                    }, 1500);
+                } else {
+                    errorDiv.textContent = data.error || 'Failed to create post';
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                errorDiv.textContent = 'Network error. Please try again.';
+                errorDiv.style.display = 'block';
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/';
+        }
+
+        // Navigation toggle
+        (function(){
+            const toggle = document.getElementById('nav-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            if (!toggle || !navLinks) return;
+            
+            toggle.addEventListener('click', function(){
+                const open = navLinks.classList.toggle('open');
+                toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!navLinks.classList.contains('open')) return;
+                if (e.target === toggle) return;
+                if (!navLinks.contains(e.target)) {
+                    navLinks.classList.remove('open');
+                    toggle.setAttribute('aria-expanded', 'false');
+                }
+            });
+        })();
+
+        checkAuth();
+    </script>
+</body>
+</html>

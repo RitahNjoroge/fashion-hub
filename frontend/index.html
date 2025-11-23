@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Fashion Hub — learn and teach fashion. Community posts, tutorials and more.">
+    <title>Fashion Hub - Home</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="/favicon.ico" />
+    <meta property="og:title" content="Fashion Hub" />
+    <meta property="og:description" content="Learn & teach fashion. Connect with educators and students." />
+    <meta property="og:type" content="website" />
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="nav-brand">
+                <div class="logo">🎨 Fashion Hub</div>
+                <button id="nav-toggle" class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="active">Home</a>
+                <a href="posts.html">All Posts</a>
+                <div id="auth-buttons">
+                    <a href="login.html" class="btn-secondary">Login</a>
+                    <a href="register.html" class="btn-primary">Sign Up</a>
+                </div>
+                <div id="user-menu" class="hidden">
+                    <a href="dashboard.html">Dashboard</a>
+                    <a href="create-post.html" class="btn-primary">Create Post</a>
+                    <button onclick="logout()" class="btn-secondary">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="main">
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Learn & Teach Fashion</h1>
+                <p>Where fashion educators share knowledge and students discover their creative potential</p>
+                <div class="hero-actions">
+                    <a href="register.html" class="btn btn-primary">Get Started</a>
+                    <a href="posts.html" class="btn btn-secondary">Browse Posts</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="container">
+                <h2>Why Fashion Hub?</h2>
+                <p class="section-subtitle">A platform designed for fashion education and collaboration</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">👨‍🏫</div>
+                        <h3>For Teachers</h3>
+                        <p>Share your expertise, create content, and inspire the next generation of fashion professionals</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎓</div>
+                        <h3>For Students</h3>
+                        <p>Learn from industry experts, engage with quality content, and build your fashion knowledge</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💬</div>
+                        <h3>Community</h3>
+                        <p>Connect with like-minded individuals, share insights, and grow together in the fashion industry</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="posts-preview">
+            <div class="container">
+                <h2>Latest Posts</h2>
+                <p class="section-subtitle">Discover the latest fashion insights from our community</p>
+                
+                <div class="posts-grid" id="posts-preview">
+                    <div class="loading">Loading posts...</div>
+                </div>
+                
+                <div class="section-actions">
+                    <a href="posts.html" class="btn btn-primary">View All Posts</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <small>© Fashion Hub — Learn & Teach Fashion</small>
+            <nav class="footer-nav">
+                <a href="index.html">Home</a>
+                <a href="posts.html">All Posts</a>
+                <a href="register.html">Register</a>
+            </nav>
+        </div>
+    </footer>
+
+    <script src="script.js" defer></script>
+</body>
+</html>
